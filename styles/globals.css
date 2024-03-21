@@ -30,4 +30,23 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .login-input:focus {
+    outline: none;
+  }
+  .login-input::placeholder {
+    font-size: 0.8rem;
+  }
+  .btn-blue-pink {
+    background-image: linear-gradient(to right, #1a49f6, #cd16cd);
+  }
+  .light-gray {
+    color: #848488;
+  }
+  .dark-red {
+    color: #b3261e;
+  }
+  .dark-blue {
+    background-color: #4049aa;
+  }
+
 }
