@@ -45,8 +45,31 @@ body {
   .dark-red {
     color: #b3261e;
   }
-  .dark-blue {
+  .bg-blue {
     background-color: #4049aa;
   }
-
+  .bg-dark-blue-500 {
+    background-color: #001835;
+  }
+  .text-blue-300 {
+    color: #0f82ff;
+  }
+  .bg-text-blue-300 {
+    background-color: #0f82ff;
+  }
+  .bg-dark-blue-400 {
+    background-color: #002046;
+  }
+  .bg-dark-blue-450 {
+    background-color: #011c3e;
+  }
+  .text-gray-300 {
+    color: #d3d3d3;
+  }
+  .text-gray-200 {
+    color: #c9c9c9;
+  }
+  .text-gray-400{
+    color: #58677A;
+  }
 }

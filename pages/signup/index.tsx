@@ -1,17 +1,29 @@
 "use client";
 import PasswordShow from "@/components/PasswordShow";
+import { auth, googleProvider } from "@/config/firebase";
+import { sign } from "crypto";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const index = () => {
+const Home = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showShowPassword, setShowShowPassword] = useState<string>("invisible");
   const [passwordType, setPasswordType] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
+  const [usernameError, setUsernameError] = useState<string>("invisible");
   const [surname, setSurname] = useState<string>("");
+  const [surnameError, setSurnameError] = useState<string>("invisible");
   const [email, setEmail] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("invisible");
   const [password, setPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("invisible");
+
   function changeShowPassword(param: boolean) {
     setShowPassword(param);
     setPasswordType(!passwordType);
@@ -20,11 +32,58 @@ const index = () => {
     if (password) setShowShowPassword("");
     else setShowShowPassword("invisible");
   }, [password]);
+
+  async function createUser() {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      if (auth.currentUser) {
+        updateProfile(auth.currentUser, {
+          displayName: username + " " + surname,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleForm(e: React.ChangeEvent<HTMLFormElement>): void {
+    e.preventDefault();
+    if (username.includes(" ") || !username) setUsernameError("");
+    else setUsernameError("invisible");
+    if (surname.includes(" ") || !surname) setSurnameError("");
+    else setSurnameError("invisible");
+    if (
+      !String(email)
+        .toLowerCase()
+        .match(/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/)
+    )
+      setEmailError("visible");
+    else setEmailError("invisible");
+    if (password.length < 6) setPasswordError("visible");
+    else setPasswordError("invisible");
+    if (
+      usernameError == surnameError &&
+      surnameError == emailError &&
+      emailError == passwordError &&
+      passwordError == "invisible"
+    )
+      createUser();
+  }
+  async function signUpGoogle() {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="bg-white flex items-center flex-col w-[400px] p-7">
+    <form
+      onSubmit={handleForm}
+      className="bg-white flex items-center flex-col w-[400px] p-7">
       <div className="flex flex-col items-center gap-5">
         <h1 className="text-2xl font-bold">Sign Up</h1>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
             <label className="light-gray text-xs font-medium">Username</label>
             <div className="flex flex-col">
@@ -39,7 +98,9 @@ const index = () => {
                   placeholder="Type your username"
                 />
               </div>
-              <span className="dark-red text-xs">There should be no space</span>
+              <span className={`dark-red text-xs ${usernameError}`}>
+                There should be no space
+              </span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
@@ -56,7 +117,9 @@ const index = () => {
                   placeholder="Type your surname"
                 />
               </div>
-              <span className="dark-red text-xs">There should be no space</span>
+              <span className={`dark-red text-xs ${surnameError}`}>
+                There should be no space
+              </span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
@@ -73,7 +136,9 @@ const index = () => {
                   placeholder="Type your email"
                 />
               </div>
-              <span className="dark-red text-xs">There should be no space</span>
+              <span className={`dark-red text-xs ${emailError}`}>
+                Incorrect Email
+              </span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
@@ -100,11 +165,13 @@ const index = () => {
                   changeShowPassword={changeShowPassword}
                 />
               </div>
-              <span className="dark-red text-xs">There should be no space</span>
+              <span className={`dark-red text-xs ${passwordError}`}>
+                Password should be at least 6 characters
+              </span>
             </div>
           </div>
-          <button className="btn-blue-pink py-2 rounded-full text-white text-xs font-medium">
-            LOGIN
+          <button className="btn-blue-pink mt-1 py-2 rounded-full text-white text-xs font-medium">
+            SIGN UP
           </button>
         </div>
         <div className="flex flex-col gap-2 items-center">
@@ -113,6 +180,7 @@ const index = () => {
           </span>
           <div className="flex gap-2">
             <Image
+              onClick={signUpGoogle}
               className="cursor-pointer"
               src="/google.png"
               width={30}
@@ -130,8 +198,8 @@ const index = () => {
           LOGIN
         </Link>
       </div>
-    </div>
+    </form>
   );
 };
 
-export default index;
+export default Home;
