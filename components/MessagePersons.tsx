@@ -1,8 +1,8 @@
 import MessagePerson from "./MessagePerson";
 
-const Messages = () => {
+const MessagePersons = () => {
   return (
-    <div className="bg-dark-blue-450 p-2">
+    <div className="bg-dark-blue-450 p-2 w-[28%]">
       <p className="text-blue-300 mb-3 mt-2 tracking-[6px]">MESSAGES</p>
       <div className="flex flex-col gap-2">
         <MessagePerson />
@@ -13,4 +13,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export default MessagePersons;

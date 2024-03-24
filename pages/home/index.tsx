@@ -1,5 +1,5 @@
 import MainMessage from "@/components/MainMessage";
-import Messages from "@/components/Messages";
+import MessagePersons from "@/components/MessagePersons";
 import Profile from "@/components/Profile";
 import { auth } from "@/config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,9 +13,9 @@ const Home = () => {
     }
   });
   return (
-    <div className="flex h-[100vh]">
+    <div className="flex h-screen ">
       <Profile user={user} />
-      <Messages />
+      <MessagePersons />
       <MainMessage />
     </div>
   );

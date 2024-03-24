@@ -4,9 +4,9 @@ import Image from "next/image";
 const Profile = ({ user }: any) => {
   return (
     <div className="bg-dark-blue-500 p-9 flex flex-col gap-6">
-      <div className="flex flex-col -center gap-2">
+      <div className="flex flex-col gap-2">
         <Image alt="logo" src="/Logo.png" width={150} height={30} />
-        <div className="flex flex-col  items-center gap-2">
+        <div className="flex flex-col items-center gap-2">
           <img
             className="rounded-full"
             alt="profile picture"
