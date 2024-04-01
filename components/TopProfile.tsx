@@ -1,16 +1,19 @@
-import { DataContextType } from "@/model";
-import { DataContext } from "@/pages/_app";
+import { UserContextType, UserType } from "@/model";
+import { UserContext } from "@/pages/home";
 import Image from "next/image";
 import { useContext } from "react";
 
-const TopProfile = ({ user }: any) => {
-  const { data } = useContext(DataContext) as DataContextType;
+type TopProfileProps = {
+  otherUser: UserType | undefined;
+};
+
+const TopProfile = ({ otherUser }: TopProfileProps) => {
 
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
       <div className="flex gap-3 items-center">
         <img
-          src={user?.photoURL}
+          src={otherUser?.photo}
           className="rounded-full"
           alt="person"
           width={70}
@@ -18,7 +21,7 @@ const TopProfile = ({ user }: any) => {
         />
         <div className="text-white flex flex-col">
           <p className="text-xl mb-1">
-            {}
+            {otherUser?.name + " " + otherUser?.surname}
           </p>
           <span className="text-gray-400 font-normal">Last seen 02:55 pm</span>
         </div>

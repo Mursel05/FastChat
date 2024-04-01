@@ -1,27 +1,41 @@
 import { db } from "@/config/firebase";
-import { MessagesDataContextType } from "@/model";
-import { MessagesDataContext } from "@/pages/_app";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { DataContextType, UserType } from "@/model";
+import { DataContext } from "@/pages/_app";
+import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
-const InputMessage = ({ user, goToBottomOfDiv }: any) => {
+type InputMessageProps = {
+  user: UserType;
+  goToBottomOfDiv: () => void;
+  otherUser: UserType;
+};
+
+const InputMessage = ({
+  user,
+  goToBottomOfDiv,
+  otherUser,
+}: InputMessageProps) => {
   const [message, setMessage] = useState("");
-  const { messagesData, fetchData } = useContext(
-    MessagesDataContext
-  ) as MessagesDataContextType;
+  const { data } = useContext(DataContext) as DataContextType;
+  console.log(data);
 
   async function addMessage() {
     try {
-      await updateDoc(doc(db, "movies", messagesData[0].id), {
-        ...messagesData[0],
-        chat: [
-          ...messagesData[0].chat,
+      await updateDoc(doc(db, "Fastchat", data.id), {
+        ...data,
+        messages: [
           {
-            id: Date.now(),
-            message,
-            person: "Mürsəl Haxverdiyev",
-            time: "10-10-2024 10:23",
+            ...data.messages[0],
+            chat: [
+              ...data.messages[0].chat,
+              {
+                time: "10-10-2024 11:23",
+                message,
+                personUid: user.uid,
+                id: Date.now(),
+              },
+            ],
           },
         ],
       });
@@ -33,16 +47,13 @@ const InputMessage = ({ user, goToBottomOfDiv }: any) => {
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     setMessage("");
-    setTimeout(() => {
-      fetchData();
-    }, 100);
     addMessage();
   }
   useEffect(() => {
     setTimeout(() => {
       goToBottomOfDiv();
     }, 100);
-  }, [messagesData]);
+  }, [data]);
   return (
     <form
       onSubmit={handleForm}

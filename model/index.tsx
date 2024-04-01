@@ -1,32 +1,32 @@
-import exp from "constants";
-
 export type ChatType = {
   id: number;
   message: string;
-  person: string;
+  personUid: string;
   time: string;
 };
 export type MessagesDataType = {
   id: string;
   chat: ChatType[];
-  // idPersons: string[];
-  // person1: string;
   persons: string[];
 };
 export type UserType = {
-  id: string;
+  uid: string;
   name: string;
+  surname: string;
   email: string;
   password: string;
-  image: string;
-  status: string;
+  photo: string;
   lastSeen: string;
 };
 export type DataType = {
   messages: MessagesDataType[];
   users: UserType[];
+  id: string;
 };
 export type DataContextType = {
-  data: DataType[];
-  fetchData: () => void;
+  data: DataType;
+};
+
+export type UserContextType = {
+  user: UserType;
 };

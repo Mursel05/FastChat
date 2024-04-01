@@ -1,7 +1,12 @@
 "use client";
+import { UserContextType } from "@/model";
+import { UserContext } from "@/pages/home";
 import Image from "next/image";
+import { useContext } from "react";
 
-const Profile = ({ user }: any) => {
+const Profile = () => {
+  const { user } = useContext(UserContext) as UserContextType;
+
   return (
     <div className="bg-dark-blue-500 p-9 flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -10,11 +15,11 @@ const Profile = ({ user }: any) => {
           <img
             className="rounded-full"
             alt="profile picture"
-            src={user?.photoURL || "/profile.png"}
+            src={user?.photo || "/profile.png"}
             width={100}
             height={100}
           />
-          <p className="text-white">{user?.displayName}</p>
+          <p className="text-white">{user?.name + " " + user?.surname}</p>
         </div>
         <button className="p-1 mt-5 flex items-center justify-center gap-1 px-4 text-white bg-text-blue-300  rounded-xl rounded-ss-none">
           <Image alt="message" src="/message.png" width={15} height={15} />
