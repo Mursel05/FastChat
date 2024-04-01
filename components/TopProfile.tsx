@@ -1,12 +1,25 @@
+import { DataContextType } from "@/model";
+import { DataContext } from "@/pages/_app";
 import Image from "next/image";
+import { useContext } from "react";
 
-const TopProfile = () => {
+const TopProfile = ({ user }: any) => {
+  const { data } = useContext(DataContext) as DataContextType;
+
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
       <div className="flex gap-3 items-center">
-        <img src="/demo.png" alt="person" width={70} height={70} />
+        <img
+          src={user?.photoURL}
+          className="rounded-full"
+          alt="person"
+          width={70}
+          height={70}
+        />
         <div className="text-white flex flex-col">
-          <p className="text-xl mb-1">Christoper Campbell</p>
+          <p className="text-xl mb-1">
+            {}
+          </p>
           <span className="text-gray-400 font-normal">Last seen 02:55 pm</span>
         </div>
       </div>

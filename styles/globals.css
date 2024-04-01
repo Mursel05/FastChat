@@ -24,6 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  overflow-y: hidden;
 }
 
 @layer utilities {
@@ -69,7 +70,10 @@ body {
   .text-gray-200 {
     color: #c9c9c9;
   }
-  .text-gray-400{
-    color: #58677A;
+  .text-gray-400 {
+    color: #58677a;
+  }
+  .message-height {
+    height: calc(100% - 168px);
   }
 }

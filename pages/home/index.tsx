@@ -1,3 +1,4 @@
+"use client";
 import MainMessage from "@/components/MainMessage";
 import MessagePersons from "@/components/MessagePersons";
 import Profile from "@/components/Profile";
@@ -13,10 +14,10 @@ const Home = () => {
     }
   });
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       <Profile user={user} />
       <MessagePersons />
-      <MainMessage />
+      <MainMessage user={user} />
     </div>
   );
 };
