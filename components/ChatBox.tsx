@@ -7,7 +7,6 @@ import {
   UserContextType,
   UserType,
 } from "@/model";
-import { DataContext } from "@/pages/_app";
 import { UserContext } from "@/pages/home";
 import { useContext, useEffect, useRef, useState } from "react";
 

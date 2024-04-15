@@ -9,8 +9,7 @@ import {
   UserContextType,
   UserType,
 } from "@/model";
-import { DataContext } from "@/pages/_app";
-import { UserContext } from "@/pages/home";
+import { DataContext, UserContext } from "@/pages/home";
 
 type MainMessageProps = {
   otherUser: UserType | any;

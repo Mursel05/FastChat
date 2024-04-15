@@ -1,6 +1,6 @@
 import { db } from "@/config/firebase";
 import { DataContextType, UserType } from "@/model";
-import { DataContext } from "@/pages/_app";
+import { DataContext } from "@/pages/home";
 import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -18,7 +18,6 @@ const InputMessage = ({
 }: InputMessageProps) => {
   const [message, setMessage] = useState("");
   const { data } = useContext(DataContext) as DataContextType;
-  console.log(data);
 
   async function addMessage() {
     try {
@@ -48,12 +47,16 @@ const InputMessage = ({
     e.preventDefault();
     setMessage("");
     addMessage();
+    setTimeout(() => {
+      goToBottomOfDiv();
+    }, 100);
   }
   useEffect(() => {
     setTimeout(() => {
       goToBottomOfDiv();
     }, 100);
   }, [data]);
+
   return (
     <form
       onSubmit={handleForm}
