@@ -4,8 +4,7 @@ import {
   UserContextType,
   UserType,
 } from "@/model";
-import { DataContext } from "@/pages/_app";
-import { UserContext } from "@/pages/home";
+import { DataContext, UserContext } from "@/pages/home";
 import { useContext, useEffect, useState } from "react";
 
 type MessagePersonProps = {

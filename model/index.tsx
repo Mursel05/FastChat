@@ -8,6 +8,7 @@ export type MessagesDataType = {
   id: string;
   chat: ChatType[];
   persons: string[];
+  change: boolean;
 };
 export type UserType = {
   uid: string;
