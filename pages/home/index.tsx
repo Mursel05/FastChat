@@ -65,7 +65,7 @@ const Home = () => {
     });
   };
   setInterval(() => {
-    // fetchData();
+    fetchData();
   }, 7000);
 
   useEffect(() => {
