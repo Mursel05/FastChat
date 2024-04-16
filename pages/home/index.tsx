@@ -12,7 +12,7 @@ import {
   UserType,
 } from "@/model";
 import { createContext } from "react";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 
 export const UserContext = createContext<UserContextType | null>(null);
 export const DataContext = createContext<DataContextType | null>(null);
@@ -37,41 +37,36 @@ const Home = () => {
   function selectOtherUser(user: UserType | undefined) {
     setOtherUser(user);
   }
-
-  const fetchData = async () => {
-    const MessagesDataRef = collection(db, "Fastchat");
-    const dt = await getDocs(MessagesDataRef);
-    const filteredData: any = dt.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    const id: any = localStorage.getItem("uid");
-    const NewData = filteredData[0]?.messages.filter(
-      (message: MessagesDataType) => message.persons.includes(id)
-    );
-    if (NewData[0].change || refresh) {
-      setData(filteredData[0]);
-      setRefresh(false);
-      console.log(refresh);
-    }
-    await updateDoc(doc(db, "Fastchat", "PYLbhhrvT3TatitYKg1J"), {
-      ...filteredData[0],
-      messages: [
-        {
-          ...filteredData[0].messages[0],
-          change: false,
-        },
-      ],
-    });
-  };
-  setInterval(() => {
-    fetchData();
-  }, 7000);
+  //!
+  const WS_URL = "ws://127.0.0.1:8080";
+  const { sendJsonMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
+    share: false,
+    shouldReconnect: () => true,
+  });
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "addMessage",
+        persons: [
+          "2Nrf31AOdQRKtP3nFmV8v9NGnH33",
+          "IMJxLimlirPwTHnB1tRfJ5VoQNq1",
+        ],
+        chat: {
+          time: "4/16/2024",
+          message: "salama",
+          sender: "2Nrf31AOdQRKtP3nFmV8v9NGnH33",
+        },
+      });
+    }
+  }, [readyState]);
 
+  useEffect(() => {
+    if (lastMessage !== null) {
+      console.log(lastMessage.data);
+    }
+  }, [lastMessage]);
+  //!
   return (
     <DataContext.Provider value={{ data }}>
       <UserContext.Provider value={{ user }}>
