@@ -1,52 +1,35 @@
-import { db } from "@/config/firebase";
+import { WS_URL } from "@/config/Url";
 import { DataContextType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
-import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 
 type InputMessageProps = {
-  user: UserType;
   goToBottomOfDiv: () => void;
   otherUser: UserType;
 };
 
-const InputMessage = ({
-  user,
-  goToBottomOfDiv,
-  otherUser,
-}: InputMessageProps) => {
+const InputMessage = ({ goToBottomOfDiv, otherUser }: InputMessageProps) => {
   const [message, setMessage] = useState("");
-  const { data } = useContext(DataContext) as DataContextType;
+  const { messages, addChat } = useContext(DataContext) as DataContextType;
 
-  async function addMessage() {
-    try {
-      await updateDoc(doc(db, "Fastchat", data.id), {
-        ...data,
-        messages: [
-          {
-            ...data.messages[0],
-            chat: [
-              ...data.messages[0].chat,
-              {
-                time: "10-10-2024 11:23",
-                message,
-                personUid: user.uid,
-                id: Date.now(),
-              },
-            ],
-          },
-        ],
-      });
-    } catch (error) {
-      console.log(error);
+  const { lastMessage, sendJsonMessage, readyState } = useWebSocket(WS_URL, {
+    share: false,
+    shouldReconnect: () => true,
+  });
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const data = JSON.parse(lastMessage.data);
+      console.log(data);
     }
-  }
+  }, [lastMessage]);
 
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
+    message && addChat(otherUser.uid, message);
     setMessage("");
-    addMessage();
     setTimeout(() => {
       goToBottomOfDiv();
     }, 100);
@@ -55,7 +38,7 @@ const InputMessage = ({
     setTimeout(() => {
       goToBottomOfDiv();
     }, 100);
-  }, [data]);
+  }, [messages]);
 
   return (
     <form
