@@ -1,5 +1,4 @@
-import { UserContextType, UserType } from "@/model";
-import { UserContext } from "@/pages/home";
+import { UserType } from "@/model";
 import Image from "next/image";
 import { useContext } from "react";
 
@@ -8,7 +7,6 @@ type TopProfileProps = {
 };
 
 const TopProfile = ({ otherUser }: TopProfileProps) => {
-
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
       <div className="flex gap-3 items-center">
