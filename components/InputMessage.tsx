@@ -11,9 +11,8 @@ type InputMessageProps = {
 };
 
 const InputMessage = ({ goToBottomOfDiv, otherUser }: InputMessageProps) => {
-  const [message, setMessage] = useState("");
   const { messages, addChat } = useContext(DataContext) as DataContextType;
-
+  const [message, setMessage] = useState("");
   const { lastMessage, sendJsonMessage, readyState } = useWebSocket(WS_URL, {
     share: false,
     shouldReconnect: () => true,

@@ -9,15 +9,16 @@ import { WS_URL } from "@/config/Url";
 import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { createContext } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import { setuid } from "process";
 
 export const DataContext = createContext<DataContextType | null>(null);
 
 const Home = () => {
   const [user, setUser] = useState<UserType>();
+  const [uid, setUid] = useState<string>();
   const [otherUser, setOtherUser] = useState<UserType | undefined>();
-  const [uid, setUid] = useState<string>("");
+  const [otherUsers, setOtherUsers] = useState<UserType[] | undefined>();
   const [messages, setMessages] = useState<MessagesDataType[]>();
-
   const { sendJsonMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: false,
     shouldReconnect: () => true,
@@ -25,21 +26,19 @@ const Home = () => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUid(user.uid);
-      }
+      if (user) setUid(user.uid);
     });
-  }, [messages]);
+  }, []);
 
   function selectOtherUser(user: UserType | undefined) {
     setOtherUser(user);
   }
 
-  async function addChat(otherUserUid: string, message: string) {
+  async function addChat(otherUserUid: string, message: string): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "addChat",
-        persons: [user?.uid, otherUserUid],
+        persons: [auth.currentUser?.uid, otherUserUid],
         chat: {
           time: "4/16/2024",
           message,
@@ -50,68 +49,36 @@ const Home = () => {
     }
   }
 
-  function demo() {
-    // if (readyState === ReadyState.OPEN) {
-    //   sendJsonMessage({
-    //     type: "addChat",
-    //     persons: [
-    //       "2Nrf31AOdQRKtP3nFmV8v9NGnH33",
-    //       "IMJxLimlirPwTHnB1tRfJ5VoQNq1",
-    //     ],
-    //     chat: {
-    //       time: "4/16/2024",
-    //       message: "aq",
-    //       sender: "2Nrf31AOdQRKtP3nFmV8v9NGnH33",
-    //     },
-    //   });
-    // }
-
-    // if (readyState === ReadyState.OPEN) {
-    //   sendJsonMessage({
-    //     type: "addMessage",
-    //     persons: [
-    //       "2Nrf31AOdQRKtP3nFmV8v9NGnH33",
-    //       "IMJxLimlirPwTHnB1tRfJ5VoQNq1",
-    //     ],
-    //   });
-    // }
-
+  async function addMessage(uid: string): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
-        type: "getData",
-        uid,
+        type: "addMessage",
+        uid: user?.uid,
+        persons: [user?.uid, uid],
       });
     }
-
-    // if (readyState === ReadyState.OPEN) {
-    //   sendJsonMessage({
-    //     type: "addUser",
-    //     email: "mursal.haxverdiyev@gmail.com",
-    //     lastSeen: "02:56",
-    //     name: "mursal",
-    //     photo:
-    //       "https://lh3.googleusercontent.com/a/ACg8ocLjjFuW4EHiq9E0Dm5IssuxHSYipOBzRIR7lIbcyPyn=s96-c",
-    //     surname: "haxverdiyev",
-    //     uid: "IMJxLimlirPwTHnB1tRfJ5VoQNq1",
-    //   });
-    // }
   }
 
   useEffect(() => {
-    demo();
-  }, [readyState, uid]);
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "getData",
+        uid: auth.currentUser?.uid,
+      });
+    }
+  }, [readyState, auth.currentUser?.uid]);
 
   useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
-      data.user && setUser(data.user);
       setMessages(data.messages);
-      console.log(data);
+      data.user && setUser(data.user);
+      data.otherUsers && setOtherUsers(data.otherUsers);
     }
   }, [lastMessage]);
 
   return (
-    <DataContext.Provider value={{ messages, user, addChat }}>
+    <DataContext.Provider value={{addMessage, otherUsers, messages, user, addChat }}>
       <div className="flex h-screen">
         <Profile />
         <MessagePersons selectOtherUser={selectOtherUser} />
