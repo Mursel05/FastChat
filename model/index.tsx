@@ -10,6 +10,7 @@ export type MessagesDataType = {
   persons: string[];
 };
 export type UserType = {
+  _id: string;
   uid: string;
   name: string;
   surname: string;
@@ -21,4 +22,6 @@ export type DataContextType = {
   messages: MessagesDataType[] | undefined;
   user: UserType | undefined;
   addChat: (otherUserUid: string, message: string) => void;
+  addMessage: (uid: string) => void;
+  otherUsers: UserType[] | undefined;
 };
