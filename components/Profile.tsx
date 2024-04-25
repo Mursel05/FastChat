@@ -16,7 +16,6 @@ const Profile = () => {
             className="rounded-full"
             alt="profile picture"
             src={user?.photo || "/profile.png"}
-            onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
             width={100}
             height={100}
           />
