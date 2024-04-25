@@ -1,11 +1,11 @@
 "use client";
-import { UserContextType } from "@/model";
-import { UserContext } from "@/pages/home";
+import { DataContextType } from "@/model";
+import { DataContext } from "@/pages/home";
 import Image from "next/image";
 import { useContext } from "react";
 
 const Profile = () => {
-  const { user } = useContext(UserContext) as UserContextType;
+  const { user } = useContext(DataContext) as DataContextType;
 
   return (
     <div className="bg-dark-blue-500 p-9 flex flex-col gap-6">
@@ -15,7 +15,7 @@ const Profile = () => {
           <img
             className="rounded-full"
             alt="profile picture"
-            src={user?.photo || "/profile.png"}
+            src={user?.photo}
             width={100}
             height={100}
           />

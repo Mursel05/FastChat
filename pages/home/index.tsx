@@ -2,85 +2,88 @@
 import MainMessage from "@/components/MainMessage";
 import MessagePersons from "@/components/MessagePersons";
 import Profile from "@/components/Profile";
-import { auth, db } from "@/config/firebase";
+import { auth } from "@/config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import {
-  DataContextType,
-  MessagesDataType,
-  UserContextType,
-  UserType,
-} from "@/model";
+import { WS_URL } from "@/config/Url";
+import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { createContext } from "react";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import { setuid } from "process";
 
-export const UserContext = createContext<UserContextType | null>(null);
 export const DataContext = createContext<DataContextType | null>(null);
 
 const Home = () => {
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<UserType>();
+  const [uid, setUid] = useState<string>();
   const [otherUser, setOtherUser] = useState<UserType | undefined>();
-  const [uid, setUid] = useState<string>("");
-  const [data, setData] = useState<any>();
-  const [refresh, setRefresh] = useState<boolean>(true);
+  const [otherUsers, setOtherUsers] = useState<UserType[] | undefined>();
+  const [messages, setMessages] = useState<MessagesDataType[]>();
+  const { sendJsonMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
+    share: false,
+    shouldReconnect: () => true,
+  });
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUid(user.uid);
-        localStorage.setItem("uid", user.uid);
-      }
+      if (user) setUid(user.uid);
     });
-    setUser(data?.users.find((user: UserType) => user.uid === uid));
-  }, [data]);
+  }, []);
 
   function selectOtherUser(user: UserType | undefined) {
     setOtherUser(user);
   }
 
-  const fetchData = async () => {
-    const MessagesDataRef = collection(db, "Fastchat");
-    const dt = await getDocs(MessagesDataRef);
-    const filteredData: any = dt.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    const id: any = localStorage.getItem("uid");
-    const NewData = filteredData[0]?.messages.filter(
-      (message: MessagesDataType) => message.persons.includes(id)
-    );
-    if (NewData[0].change || refresh) {
-      setData(filteredData[0]);
-      setRefresh(false);
-      console.log(refresh);
-    }
-    await updateDoc(doc(db, "Fastchat", "PYLbhhrvT3TatitYKg1J"), {
-      ...filteredData[0],
-      messages: [
-        {
-          ...filteredData[0].messages[0],
-          change: false,
+  async function addChat(otherUserUid: string, message: string): Promise<void> {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "addChat",
+        persons: [auth.currentUser?.uid, otherUserUid],
+        chat: {
+          time: "4/16/2024",
+          message,
+          sender: user?.uid,
         },
-      ],
-    });
-  };
-  setInterval(() => {
-    fetchData();
-  }, 7000);
+        uid: user?.uid,
+      });
+    }
+  }
+
+  async function addMessage(uid: string): Promise<void> {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "addMessage",
+        uid: user?.uid,
+        persons: [user?.uid, uid],
+      });
+    }
+  }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "getData",
+        uid: auth.currentUser?.uid,
+      });
+    }
+  }, [readyState, auth.currentUser?.uid]);
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const data = JSON.parse(lastMessage.data);
+      setMessages(data.messages);
+      data.user && setUser(data.user);
+      data.otherUsers && setOtherUsers(data.otherUsers);
+    }
+  }, [lastMessage]);
 
   return (
-    <DataContext.Provider value={{ data }}>
-      <UserContext.Provider value={{ user }}>
-        <div className="flex h-screen">
-          <Profile />
-          <MessagePersons selectOtherUser={selectOtherUser} />
-          <MainMessage otherUser={otherUser} />
-        </div>
-      </UserContext.Provider>
+    <DataContext.Provider value={{addMessage, otherUsers, messages, user, addChat }}>
+      <div className="flex h-screen">
+        <Profile />
+        <MessagePersons selectOtherUser={selectOtherUser} />
+        <MainMessage otherUser={otherUser} user={user} />
+      </div>
     </DataContext.Provider>
   );
 };

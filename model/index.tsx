@@ -1,33 +1,27 @@
 export type ChatType = {
-  id: number;
+  _id: number;
   message: string;
-  personUid: string;
+  sender: string;
   time: string;
 };
 export type MessagesDataType = {
-  id: string;
-  chat: ChatType[];
+  _id: string;
+  chats: ChatType[];
   persons: string[];
-  change: boolean;
 };
 export type UserType = {
+  _id: string;
   uid: string;
   name: string;
   surname: string;
   email: string;
-  password: string;
   photo: string;
   lastSeen: string;
 };
-export type DataType = {
-  messages: MessagesDataType[];
-  users: UserType[];
-  id: string;
-};
 export type DataContextType = {
-  data: DataType;
-};
-
-export type UserContextType = {
-  user: UserType;
+  messages: MessagesDataType[] | undefined;
+  user: UserType | undefined;
+  addChat: (otherUserUid: string, message: string) => void;
+  addMessage: (uid: string) => void;
+  otherUsers: UserType[] | undefined;
 };

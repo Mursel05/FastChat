@@ -1,13 +1,12 @@
-import { UserContextType, UserType } from "@/model";
-import { UserContext } from "@/pages/home";
+import { UserType } from "@/model";
 import Image from "next/image";
-import { useContext } from "react";
 
 type TopProfileProps = {
   otherUser: UserType | undefined;
 };
 
 const TopProfile = ({ otherUser }: TopProfileProps) => {
+  console.log(otherUser?.lastSeen);
 
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
@@ -23,7 +22,11 @@ const TopProfile = ({ otherUser }: TopProfileProps) => {
           <p className="text-xl mb-1">
             {otherUser?.name + " " + otherUser?.surname}
           </p>
-          <span className="text-gray-400 font-normal">Last seen 02:55 pm</span>
+          <span className="text-gray-400 font-normal">
+            {otherUser?.lastSeen == "Online"
+              ? otherUser?.lastSeen
+              : `Last seen ${otherUser?.lastSeen.slice(12)}`}
+          </span>
         </div>
       </div>
       <div className="flex items-center gap-12">

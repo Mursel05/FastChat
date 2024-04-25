@@ -76,4 +76,9 @@ body {
   .message-height {
     height: calc(100% - 168px);
   }
+  .find-email-input {
+    outline: none;
+    padding: 0.3rem 0rem;
+    padding-left: 0.4rem;
+  }
 }
