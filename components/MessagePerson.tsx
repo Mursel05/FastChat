@@ -19,6 +19,7 @@ const MessagePerson = ({
         className="cursor-pointer flex items-center gap-3 p-4 bg-dark-blue-400">
         <img
           src={user?.photo}
+          onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
           className="rounded-full"
           alt="person"
           width={70}
