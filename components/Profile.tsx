@@ -8,9 +8,19 @@ const Profile = () => {
   const { user } = useContext(DataContext) as DataContextType;
 
   return (
-    <div className="bg-dark-blue-500 p-9 flex flex-col gap-6">
+    <div className="bg-dark-blue-500 p-9 flex flex-col w-[17%] gap-6">
       <div className="flex flex-col gap-2">
-        <Image alt="logo" src="/Logo.png" width={150} height={30} />
+        <div className="flex items-center gap-2">
+          <Image className="h-[35px]" alt="logo" src="/favicon.png" width={35} height={35} />
+          <div>
+            <span className="text-white font-bold tracking-wider text-xl">
+              FAST
+            </span>
+            <span className="text-blue-500 font-semibold -tracking-normal text-xl">
+              CHAT
+            </span>
+          </div>
+        </div>
         <div className="flex flex-col items-center gap-2">
           <img
             className="rounded-full"
@@ -33,7 +43,7 @@ const Profile = () => {
           <span>Groups</span>
         </div>
         <div className="flex gap-2 items-center text-gray-300">
-          <Image alt="contacts" src="/vector.png" width={18} height={18} />
+          <Image className="h-[18px]"  alt="contacts" src="/vector.png" width={18} height={18} />
           <span>Contacts</span>
         </div>
         <div className="flex gap-2 items-center text-gray-300">
@@ -45,7 +55,7 @@ const Profile = () => {
           <span>Settings</span>
         </div>
         <div className="flex gap-2 items-center text-gray-300">
-          <Image alt="night mode" src="/moon.png" width={18} height={18} />
+          <Image className="h-[18px]" alt="night mode" src="/moon.png" width={18} height={18} />
           <span>Night Mode</span>
           <div></div>
         </div>

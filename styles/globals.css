@@ -81,4 +81,9 @@ body {
     padding: 0.3rem 0rem;
     padding-left: 0.4rem;
   }
+  .last-three-dots {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

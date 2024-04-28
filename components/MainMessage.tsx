@@ -12,19 +12,19 @@ type MainMessageProps = {
 
 const MainMessage = ({ otherUser, user }: MainMessageProps) => {
   const { messages } = useContext(DataContext) as DataContextType;
-  const divRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
 
   const goToBottomOfDiv = () => {
-    if (divRef.current) {
-      const { scrollHeight, clientHeight } = divRef.current;
-      divRef.current.scrollTo({
-        top: scrollHeight - clientHeight,
-        behavior: "smooth",
-      });
-    }
+    setTimeout(() => {
+      if (chatBoxRef.current) {
+        const { scrollHeight, clientHeight } = chatBoxRef.current;
+        chatBoxRef.current.scrollTo({
+          top: scrollHeight - clientHeight,
+        });
+      }
+    }, 1);
   };
-  // console.log(messages);
 
   useEffect(() => {
     setMessage(
@@ -36,11 +36,15 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
     );
   }, [otherUser, messages]);
 
+  useEffect(() => {
+    goToBottomOfDiv();
+  }, [otherUser]);
+
   if (otherUser)
     return (
       <div className="w-[55%]  relative">
         <TopProfile otherUser={otherUser} />
-        <ChatBox divRef={divRef} message={message} otherUser={otherUser} />
+        <ChatBox chatBoxRef={chatBoxRef} message={message} otherUser={otherUser} />
         <InputMessage goToBottomOfDiv={goToBottomOfDiv} otherUser={otherUser} />
       </div>
     );

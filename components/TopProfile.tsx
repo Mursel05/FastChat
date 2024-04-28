@@ -6,13 +6,13 @@ type TopProfileProps = {
 };
 
 const TopProfile = ({ otherUser }: TopProfileProps) => {
-  console.log(otherUser?.lastSeen);
 
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
       <div className="flex gap-3 items-center">
         <img
           src={otherUser?.photo}
+          onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
           className="rounded-full"
           alt="person"
           width={70}

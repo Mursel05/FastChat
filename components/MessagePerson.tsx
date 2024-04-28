@@ -25,9 +25,9 @@ const MessagePerson = ({
           width={70}
           height={70}
         />
-        <div className="text-white flex flex-col gap-1">
-          <p className="text-gray-200">{user.name + " " + user.surname}</p>
-          <span>In front of the bar, about whic...</span>
+        <div className="text-white flex flex-col gap-1 w-[calc(100%-70px)]">
+          <p className="text-gray-200 last-three-dots">{user.name + " " + user.surname}</p>
+          <span className="last-three-dots">{message?.chats.slice(-1)[0]?.message}</span>
         </div>
       </div>
     );

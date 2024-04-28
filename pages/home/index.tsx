@@ -9,7 +9,6 @@ import { WS_URL } from "@/config/Url";
 import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { createContext } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { setuid } from "process";
 
 export const DataContext = createContext<DataContextType | null>(null);
 
@@ -36,15 +35,27 @@ const Home = () => {
 
   async function addChat(otherUserUid: string, message: string): Promise<void> {
     if (readyState === ReadyState.OPEN) {
+      const d = new Date();
       sendJsonMessage({
         type: "addChat",
-        persons: [auth.currentUser?.uid, otherUserUid],
+        persons: [user?.uid, otherUserUid],
         chat: {
-          time: "4/16/2024",
+          time: d.toString().slice(4, 21),
           message,
           sender: user?.uid,
+          seen: false,
         },
         uid: user?.uid,
+      });
+    }
+  }
+
+  async function changeSeen(otherUserUid: string): Promise<void> {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "changeSeen",
+        persons: [user?.uid, otherUserUid],
+        uid: otherUserUid,
       });
     }
   }
@@ -63,10 +74,10 @@ const Home = () => {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "getData",
-        uid: auth.currentUser?.uid,
+        uid,
       });
     }
-  }, [readyState, auth.currentUser?.uid]);
+  }, [readyState, uid]);
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -78,8 +89,9 @@ const Home = () => {
   }, [lastMessage]);
 
   return (
-    <DataContext.Provider value={{addMessage, otherUsers, messages, user, addChat }}>
-      <div className="flex h-screen">
+    <DataContext.Provider
+      value={{ addMessage, changeSeen, otherUsers, messages, user, addChat }}>
+      <div className="flex h-screen w-100">
         <Profile />
         <MessagePersons selectOtherUser={selectOtherUser} />
         <MainMessage otherUser={otherUser} user={user} />

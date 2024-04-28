@@ -69,6 +69,7 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
                   height={50}
                   className="rounded-full"
                   src={user.photo}
+                  onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
                   alt="user photo"
                 />
                 <div className="flex flex-col">
