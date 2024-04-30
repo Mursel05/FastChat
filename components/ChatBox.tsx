@@ -2,6 +2,7 @@
 import { ChatType, DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import { useContext, useEffect, useRef, useState } from "react";
+
 const usePrevious = (value: any) => {
   const ref = useRef();
   useEffect(() => {
@@ -57,7 +58,7 @@ const OtherUserChat = ({
     if (!ele) {
       return;
     }
-    if (!wasInView && isInView) {
+    if (!wasInView && isInView && !item.seen) {
       changeSeen(otherUser.uid);
     }
   }, [isInView]);
@@ -98,13 +99,7 @@ type ChatBoxProps = {
 };
 
 const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
-  const { user, changeSeen } = useContext(DataContext) as DataContextType;
-
-  useEffect(() => {
-    changeSeen(otherUser.uid);
-  }, []);
-
-  console.log(message);
+  const { user } = useContext(DataContext) as DataContextType;
 
   if (message)
     return (

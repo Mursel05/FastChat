@@ -85,8 +85,7 @@ const Home = () => {
       setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
-      console.log(messages);
-      
+      // console.log(data);
     }
   }, [lastMessage]);
 

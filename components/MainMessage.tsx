@@ -1,7 +1,13 @@
 import TopProfile from "./TopProfile";
 import InputMessage from "./InputMessage";
 import ChatBox from "./ChatBox";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { ChatType, DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 
@@ -11,7 +17,7 @@ type MainMessageProps = {
 };
 
 const MainMessage = ({ otherUser, user }: MainMessageProps) => {
-  const { messages } = useContext(DataContext) as DataContextType;
+  const { messages, changeSeen } = useContext(DataContext) as DataContextType;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
 
@@ -40,15 +46,27 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
     goToBottomOfDiv();
   }, [otherUser]);
 
-  if (otherUser)
+  useLayoutEffect(() => {
+    if (otherUser) {
+      // changeSeen(otherUser.uid);
+    }
+  }, [otherUser]);
+
+  if (otherUser) {
+    console.log("otherUser", otherUser);
+    
     return (
       <div className="w-[55%]  relative">
         <TopProfile otherUser={otherUser} />
-        <ChatBox chatBoxRef={chatBoxRef} message={message} otherUser={otherUser} />
+        <ChatBox
+          chatBoxRef={chatBoxRef}
+          message={message}
+          otherUser={otherUser}
+        />
         <InputMessage goToBottomOfDiv={goToBottomOfDiv} otherUser={otherUser} />
       </div>
     );
-  else return <div className="w-[55%]"></div>;
+  } else return <div className="w-[55%]"></div>;
 };
 
 export default MainMessage;
