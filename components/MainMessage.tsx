@@ -46,15 +46,7 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
     goToBottomOfDiv();
   }, [otherUser]);
 
-  useLayoutEffect(() => {
-    if (otherUser) {
-      // changeSeen(otherUser.uid);
-    }
-  }, [otherUser]);
-
   if (otherUser) {
-    console.log("otherUser", otherUser);
-    
     return (
       <div className="w-[55%]  relative">
         <TopProfile otherUser={otherUser} />

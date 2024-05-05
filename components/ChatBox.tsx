@@ -100,50 +100,52 @@ type ChatBoxProps = {
 
 const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
   const { user } = useContext(DataContext) as DataContextType;
+  console.log(message?.chats);
 
-  if (message)
-    return (
-      <div
-        ref={chatBoxRef}
-        className="py-4 bg-dark-blue-400 px-7 flex flex-col-reverse overflow-y-scroll gap-2 message-height">
-        {message.chats.toReversed().map((item, index) => {
-          return item.sender != user?.uid ? (
-            <OtherUserChat
-              chatBoxRef={chatBoxRef}
-              key={item._id}
-              item={item}
-              index={index}
-              otherUser={otherUser}
-              message={message}
-            />
-          ) : (
-            <div key={item._id} className="self-end flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-sm">
-                  {item.time.slice(12)}
-                </span>
-                <div
-                  key={index}
-                  className={`max-w-md text-white bg-dark-blue-500 p-3 ${
-                    message.chats.toReversed()[index + 1]?.sender == user.uid
-                      ? "rounded-e-none"
-                      : ""
-                  } rounded-xl rounded-ee-none`}>
-                  <span className="break-all">{item.message}</span>
-                </div>
-              </div>
-              <span
-                // ref={seenRef}
-                className={`${
-                  !item.seen && "hidden"
-                } self-end text-gray-400 text-xs pr-1`}>
-                Seen
+  return (
+    <div
+      ref={chatBoxRef}
+      className="py-4 bg-dark-blue-400 px-7 flex flex-col-reverse overflow-y-scroll gap-2 message-height">
+      {message?.chats.toReversed().map((item, index) => {
+        return item.sender != user?.uid ? (
+          <OtherUserChat
+            chatBoxRef={chatBoxRef}
+            key={item._id}
+            item={item}
+            index={index}
+            otherUser={otherUser}
+            message={message}
+          />
+        ) : (
+          <div key={item._id} className="self-end flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400 text-sm">
+                {item.time.slice(12)}
               </span>
+              <div
+                key={index}
+                className={`max-w-md text-white bg-dark-blue-500 p-3 ${
+                  message.chats.toReversed()[index + 1]?.sender == user.uid
+                    ? "rounded-e-none"
+                    : ""
+                } rounded-xl rounded-ee-none`}>
+                <span className="break-all">{item.message}</span>
+              </div>
             </div>
-          );
-        })}
-      </div>
-    );
+            <span
+              // ref={seenRef}
+              className={`${
+                item.seen
+                  ? ""
+                  : "hidden"
+              } self-end text-gray-400 text-xs pr-1`}>
+              Seen
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default ChatBox;

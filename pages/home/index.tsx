@@ -45,7 +45,7 @@ const Home = () => {
           sender: user?.uid,
           seen: false,
         },
-        uid: user?.uid,
+        uid,
       });
     }
   }
@@ -55,7 +55,8 @@ const Home = () => {
       sendJsonMessage({
         type: "changeSeen",
         persons: [user?.uid, otherUserUid],
-        uid: otherUserUid,
+        otherUserUid,
+        uid,
       });
     }
   }
@@ -64,7 +65,7 @@ const Home = () => {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "addMessage",
-        uid: user?.uid,
+        uid,
         persons: [user?.uid, uid],
       });
     }
@@ -74,7 +75,7 @@ const Home = () => {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "getData",
-        uid,
+        uid: uid,
       });
     }
   }, [readyState, uid]);
@@ -85,7 +86,7 @@ const Home = () => {
       setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
-      // console.log(data);
+      console.log(data);
     }
   }, [lastMessage]);
 
