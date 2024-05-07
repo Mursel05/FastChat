@@ -38,7 +38,13 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
 
   return (
     <div className="bg-dark-blue-450 p-2 w-[28%]">
-      <div className="relative">
+      <div
+        onBlur={() => {
+          setTimeout(() => {
+            setEmail("");
+          }, 1000);
+        }}
+        className="relative">
         <div className="flex flex-col gap-2">
           <label className="text-gray-300 text-lg" htmlFor="addMessage">
             Write Email
@@ -46,7 +52,7 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            className="find-email-input rounded-t-md"
+            className="find-email-input rounded-t-md text-black"
             id="addMessage"
             type="email"
             placeholder="Search Email"
@@ -59,7 +65,9 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
               <div
                 key={user._id}
                 onClick={() => {
-                  addMessage(user.uid);
+                  if (!messages?.some((u) => u.persons.includes(user.uid))) {
+                    addMessage(user.uid);
+                  }
                   selectOtherUser(user);
                   setEmail("");
                 }}
@@ -72,7 +80,7 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
                   onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
                   alt="user photo"
                 />
-                <div className="flex flex-col">
+                <div className="flex flex-col text-black">
                   <span>{user.name + " " + user.surname}</span>
                   <span>{user.email}</span>
                 </div>

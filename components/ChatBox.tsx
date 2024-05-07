@@ -100,7 +100,6 @@ type ChatBoxProps = {
 
 const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
   const { user } = useContext(DataContext) as DataContextType;
-  console.log(message?.chats);
 
   return (
     <div
@@ -133,9 +132,10 @@ const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
               </div>
             </div>
             <span
-              // ref={seenRef}
               className={`${
-                item.seen
+                item.seen &&
+                !message.chats.toReversed()[index - 1] &&
+                message.chats.toReversed()[index].sender == user.uid
                   ? ""
                   : "hidden"
               } self-end text-gray-400 text-xs pr-1`}>

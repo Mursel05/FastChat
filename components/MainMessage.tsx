@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { ChatType, DataContextType, MessagesDataType, UserType } from "@/model";
+import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 
 type MainMessageProps = {
@@ -17,7 +17,7 @@ type MainMessageProps = {
 };
 
 const MainMessage = ({ otherUser, user }: MainMessageProps) => {
-  const { messages, changeSeen } = useContext(DataContext) as DataContextType;
+  const { messages } = useContext(DataContext) as DataContextType;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
 
@@ -55,7 +55,7 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
           message={message}
           otherUser={otherUser}
         />
-        <InputMessage goToBottomOfDiv={goToBottomOfDiv} otherUser={otherUser} />
+        <InputMessage otherUser={otherUser} />
       </div>
     );
   } else return <div className="w-[55%]"></div>;

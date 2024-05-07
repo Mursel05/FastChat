@@ -116,7 +116,7 @@ const Home = () => {
                     size={25}
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
-                    className="login-input mb-1"
+                    className="login-input mb-1 text-black"
                     placeholder="Type your Email"
                   />
                 </div>
@@ -139,7 +139,7 @@ const Home = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                     size={25}
-                    className="login-input mb-1"
+                    className="login-input mb-1 text-black"
                     type={passwordType ? "text" : "password"}
                     placeholder="Type your password"
                   />

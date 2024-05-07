@@ -1,28 +1,23 @@
 import { DataContextType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 type InputMessageProps = {
-  goToBottomOfDiv: () => void;
   otherUser: UserType;
 };
 
-const InputMessage = ({ goToBottomOfDiv, otherUser }: InputMessageProps) => {
-  const { messages, addChat } = useContext(DataContext) as DataContextType;
+const InputMessage = ({ otherUser }: InputMessageProps) => {
+  const { addChat } = useContext(DataContext) as DataContextType;
   const [message, setMessage] = useState("");
 
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-    message && addChat(otherUser.uid, message);
-    setMessage("");
-    
+    if (message.trim()) {
+      addChat(otherUser.uid, message.trim());
+      setMessage("");
+    }
   }
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     goToBottomOfDiv();
-  //   }, 100);
-  // }, [messages]);
 
   return (
     <form
