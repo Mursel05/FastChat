@@ -5,17 +5,43 @@ import { useContext, useState } from "react";
 
 type InputMessageProps = {
   otherUser: UserType;
+  file: any;
+  setFile: any;
 };
 
-const InputMessage = ({ otherUser }: InputMessageProps) => {
+const InputMessage = ({ otherUser, file, setFile }: InputMessageProps) => {
   const { addChat } = useContext(DataContext) as DataContextType;
   const [message, setMessage] = useState("");
 
+  function toDataURL(
+    url: string,
+    callback: (dataUrl: string | ArrayBuffer | null) => void
+  ) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (message.trim()) {
-      addChat(otherUser.uid, message.trim());
-      setMessage("");
+    if (file) {
+      toDataURL(URL.createObjectURL(file), (url: any) =>
+        addChat(otherUser.uid, url, file.type)
+      );
+      setFile(null);
+    } else {
+      if (message.trim()) {
+        addChat(otherUser.uid, message.trim(), "text");
+        setMessage("");
+      }
     }
   }
 
@@ -23,7 +49,16 @@ const InputMessage = ({ otherUser }: InputMessageProps) => {
     <form
       onSubmit={handleForm}
       className="bg-dark-blue-500 gap-2 p-2 flex items-center absolute bottom-0 w-full">
-      <button>
+      <input
+        type="file"
+        onChange={(e: any) => {
+          setFile(e.target.files[0]);
+          e.target.value = "";
+        }}
+        className="hidden"
+        id="uploadInput"
+      />
+      <label htmlFor="uploadInput">
         <Image
           className="cursor-pointer hover:bg-slate-600 p-1 rounded-xl "
           src="/attachment.png"
@@ -31,7 +66,7 @@ const InputMessage = ({ otherUser }: InputMessageProps) => {
           height={45}
           width={45}
         />
-      </button>
+      </label>
       <input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -40,7 +75,7 @@ const InputMessage = ({ otherUser }: InputMessageProps) => {
         placeholder="Type your Message..."
       />
       <div className="flex gap-2 items-center">
-        <button>
+        <label htmlFor="">
           <Image
             className="cursor-pointer hover:bg-slate-600 p-1 rounded-xl "
             src="/voice.png"
@@ -48,7 +83,7 @@ const InputMessage = ({ otherUser }: InputMessageProps) => {
             height={45}
             width={45}
           />
-        </button>
+        </label>
         <button>
           <Image
             className="cursor-pointer hover:bg-slate-600 p-1 rounded-xl "

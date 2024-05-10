@@ -33,20 +33,27 @@ const Home = () => {
     setOtherUser(user);
   }
 
-  async function addChat(otherUserUid: string, message: string): Promise<void> {
+  async function addChat(
+    otherUserUid: string,
+    message: string,
+    chatType: string
+  ): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       const d = new Date();
       sendJsonMessage({
         type: "addChat",
-        persons: [user?.uid, otherUserUid],
+        persons: [uid, otherUserUid],
         chat: {
           time: d.toString().slice(4, 21),
           message,
-          sender: user?.uid,
+          sender: uid,
           seen: false,
+          chatType,
         },
         uid,
       });
+      console.log("addChat");
+      
     }
   }
 
@@ -54,19 +61,19 @@ const Home = () => {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "changeSeen",
-        persons: [user?.uid, otherUserUid],
+        persons: [uid, otherUserUid],
         otherUserUid,
         uid,
       });
     }
   }
 
-  async function addMessage(uid: string): Promise<void> {
+  async function addMessage(otherUserUid: string): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "addMessage",
         uid,
-        persons: [user?.uid, uid],
+        persons: [uid, otherUserUid],
       });
     }
   }
@@ -86,6 +93,8 @@ const Home = () => {
       setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
+      console.log("lastMessage");
+      
     }
   }, [lastMessage]);
 

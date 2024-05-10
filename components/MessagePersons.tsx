@@ -38,18 +38,13 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
 
   return (
     <div className="bg-dark-blue-450 p-2 w-[28%]">
-      <div
-        onBlur={() => {
-          setTimeout(() => {
-            setEmail("");
-          }, 1000);
-        }}
-        className="relative">
+      <div className="relative">
         <div className="flex flex-col gap-2">
           <label className="text-gray-300 text-lg" htmlFor="addMessage">
             Write Email
           </label>
           <input
+            onBlur={() => setTimeout(() => setEmail(""), 200)}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             className="find-email-input rounded-t-md text-black"

@@ -85,7 +85,11 @@ const OtherUserChat = ({
             ? "rounded-s-none"
             : ""
         } rounded-ss-none`}>
-        <span className="break-all">{item.message}</span>
+        {item.chatType == "text" ? (
+          <span className="break-all">{item.message}</span>
+        ) : (
+          <img alt="img" src={item.message} />
+        )}
       </div>
       <span className="text-gray-400 text-sm">{item.time.slice(12)}</span>
     </div>
@@ -96,15 +100,23 @@ type ChatBoxProps = {
   chatBoxRef: React.RefObject<HTMLDivElement>;
   message: MessagesDataType | undefined;
   otherUser: UserType;
+  file: any;
+  setFile: any;
 };
 
-const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
+const ChatBox = ({
+  chatBoxRef,
+  message,
+  otherUser,
+  file,
+  setFile,
+}: ChatBoxProps) => {
   const { user } = useContext(DataContext) as DataContextType;
 
   return (
     <div
       ref={chatBoxRef}
-      className="py-4 bg-dark-blue-400 px-7 flex flex-col-reverse overflow-y-scroll gap-2 message-height">
+      className="py-4 bg-dark-blue-400 px-7 flex flex-col-reverse overflow-y-scroll gap-2 message-height relative">
       {message?.chats.toReversed().map((item, index) => {
         return item.sender != user?.uid ? (
           <OtherUserChat
@@ -128,7 +140,11 @@ const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
                     ? "rounded-e-none"
                     : ""
                 } rounded-xl rounded-ee-none`}>
-                <span className="break-all">{item.message}</span>
+                {item.chatType == "text" ? (
+                  <span className="break-all">{item.message}</span>
+                ) : (
+                  <img alt="img" src={item.message} />
+                )}
               </div>
             </div>
             <span
@@ -144,6 +160,20 @@ const ChatBox = ({ chatBoxRef, message, otherUser }: ChatBoxProps) => {
           </div>
         );
       })}
+      {file && (
+        <div className="absolute self-center flex flex-col items-center gap-4 bg-white mb-[-16px] p-3 w-2/3">
+          <button
+            onClick={() => setFile(null)}
+            className="self-end mr-3 hover:bg-slate-500 px-3 py-2 rounded-lg text-white bg-slate-400">
+            Discard
+          </button>
+          {file.type.includes("image") ? (
+            <img src={URL.createObjectURL(file)} alt={file.name} />
+          ) : (
+            <span>{file.name}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ export type ChatType = {
   sender: string;
   time: string;
   seen: boolean;
+  chatType: string;
 };
 export type MessagesDataType = {
   _id: string;
@@ -22,7 +23,7 @@ export type UserType = {
 export type DataContextType = {
   messages: MessagesDataType[] | undefined;
   user: UserType | undefined;
-  addChat: (otherUserUid: string, message: string) => void;
+  addChat: (otherUserUid: string, message: string, type: string) => void;
   addMessage: (uid: string) => void;
   otherUsers: UserType[] | undefined;
   changeSeen: (otherUserUid: string) => void;

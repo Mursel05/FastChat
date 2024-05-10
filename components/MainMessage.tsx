@@ -20,6 +20,7 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
   const { messages } = useContext(DataContext) as DataContextType;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
+  const [file, setFile] = useState<any>(null);
 
   const goToBottomOfDiv = () => {
     setTimeout(() => {
@@ -51,11 +52,13 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
       <div className="w-[55%]  relative">
         <TopProfile otherUser={otherUser} />
         <ChatBox
+          file={file}
           chatBoxRef={chatBoxRef}
+          setFile={setFile}
           message={message}
           otherUser={otherUser}
         />
-        <InputMessage otherUser={otherUser} />
+        <InputMessage otherUser={otherUser} file={file} setFile={setFile} />
       </div>
     );
   } else return <div className="w-[55%]"></div>;
