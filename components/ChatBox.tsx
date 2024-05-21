@@ -87,6 +87,8 @@ const OtherUserChat = ({
         } rounded-ss-none`}>
         {item.chatType == "text" ? (
           <span className="break-all">{item.message}</span>
+        ) : item.chatType == "video" ? (
+          <video controls src={item.message}></video>
         ) : (
           <img alt="img" src={item.message} />
         )}

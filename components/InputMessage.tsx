@@ -27,8 +27,8 @@ const InputMessage = ({
     xhr.onload = function () {
       var reader = new FileReader();
       reader.onloadend = function () {
-        // callback(reader.result);
-        console.log(reader.result);
+        callback(reader.result);
+        // console.log(reader.result);
       };
       reader.readAsDataURL(xhr.response);
     };
