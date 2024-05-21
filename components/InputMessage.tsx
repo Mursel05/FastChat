@@ -76,14 +76,14 @@ const InputMessage = ({
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     if (file) {
-      const a = file.slice(0, 1335112);
-      const b = file.slice(1335112, 2036432);
-      const newFilea = new File([a], file.name, { type: file.type });
-      const newFileb = new File([b], file.name, { type: file.type });
-      const files = [newFilea, newFileb];
-      const formData = new FormData();
-      files.forEach((file) => formData.append("file", file));
-      console.log(formData);
+      // const a = file.slice(0, 1335112);
+      // const b = file.slice(1335112, 2036432);
+      // const newFilea = new File([a], file.name, { type: file.type });
+      // const newFileb = new File([b], file.name, { type: file.type });
+      // const files = [newFilea, newFileb];
+      // const formData = new FormData();
+      // files.forEach((file) => formData.append("file", file));
+      // console.log(formData);
       // toDataURL(URL.createObjectURL(newFilea), (url: any) =>
       //   file.type.split("/")[0] == "image"
       //     ? addChat(otherUser.uid, url, "image")
@@ -91,13 +91,13 @@ const InputMessage = ({
       //     ? addChat(otherUser.uid, url, "video")
       //     : addChat(otherUser.uid, url, file.name)
       // );
-      // toDataURL(URL.createObjectURL(newFileb), (url: any) =>
-      //   file.type.split("/")[0] == "image"
-      //     ? addChat(otherUser.uid, url, "image")
-      //     : file.type.split("/")[0] == "video"
-      //     ? addChat(otherUser.uid, url, "video")
-      //     : addChat(otherUser.uid, url, file.name)
-      // );
+      toDataURL(URL.createObjectURL(file), (url: any) =>
+        file.type.split("/")[0] == "image"
+          ? addChat(otherUser.uid, url, "image")
+          : file.type.split("/")[0] == "video"
+          ? addChat(otherUser.uid, url, "video")
+          : addChat(otherUser.uid, url, file.name)
+      );
       setFile(null);
     } else {
       if (message.trim()) {
