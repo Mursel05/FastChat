@@ -10,7 +10,6 @@ const MessagePerson = ({
   user,
   selectOtherUser,
 }: MessagePersonProps) => {
-  
   if (user) {
     const unSeenChats = message?.chats.filter(
       (chat) => chat.sender == user?.uid && !chat.seen
@@ -33,7 +32,9 @@ const MessagePerson = ({
           </p>
           <div className="text-white flex items-center justify-between gap-1 w-[calc(100%-5px)]">
             <span className="last-three-dots">
-              {message?.chats.slice(-1)[0]?.message}
+              {message?.chats.slice(-1)[0]?.chatType == "text"
+                ? message?.chats.slice(-1)[0]?.message
+                : message?.chats.slice(-1)[0]?.chatType}
             </span>
             {unSeenChats ? (
               <span className="flex items-center justify-center rounded-full bg-green-900 p-3 w-2 h-2 text-sm">

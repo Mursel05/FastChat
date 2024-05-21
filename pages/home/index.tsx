@@ -52,8 +52,6 @@ const Home = () => {
         },
         uid,
       });
-      console.log("addChat");
-      
     }
   }
 
@@ -93,8 +91,7 @@ const Home = () => {
       setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
-      console.log("lastMessage");
-      
+      console.log(data);
     }
   }, [lastMessage]);
 

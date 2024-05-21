@@ -102,6 +102,8 @@ type ChatBoxProps = {
   otherUser: UserType;
   file: any;
   setFile: any;
+  goToBottomOfDiv: () => void;
+  submitBtnRef: React.RefObject<HTMLButtonElement>;
 };
 
 const ChatBox = ({
@@ -110,8 +112,14 @@ const ChatBox = ({
   otherUser,
   file,
   setFile,
+  goToBottomOfDiv,
+  submitBtnRef,
 }: ChatBoxProps) => {
   const { user } = useContext(DataContext) as DataContextType;
+
+  useEffect(() => {
+    goToBottomOfDiv();
+  }, [message]);
 
   return (
     <div
@@ -142,6 +150,8 @@ const ChatBox = ({
                 } rounded-xl rounded-ee-none`}>
                 {item.chatType == "text" ? (
                   <span className="break-all">{item.message}</span>
+                ) : item.chatType == "video" ? (
+                  <video controls src={item.message}></video>
                 ) : (
                   <img alt="img" src={item.message} />
                 )}
@@ -162,11 +172,18 @@ const ChatBox = ({
       })}
       {file && (
         <div className="absolute self-center flex flex-col items-center gap-4 bg-white mb-[-16px] p-3 w-2/3">
-          <button
-            onClick={() => setFile(null)}
-            className="self-end mr-3 hover:bg-slate-500 px-3 py-2 rounded-lg text-white bg-slate-400">
-            Discard
-          </button>
+          <div className="flex w-full justify-between">
+            <button
+              onClick={() => setFile(null)}
+              className="mr-3 hover:bg-slate-500 px-3 py-2 rounded-lg text-white bg-slate-400">
+              Discard
+            </button>
+            <button
+              onClick={() => submitBtnRef.current?.click()}
+              className="smr-3 hover:bg-blue-600 px-3 py-2 rounded-lg text-white bg-text-blue-300">
+              Send
+            </button>
+          </div>
           {file.type.includes("image") ? (
             <img src={URL.createObjectURL(file)} alt={file.name} />
           ) : (

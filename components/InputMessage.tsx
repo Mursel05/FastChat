@@ -1,15 +1,21 @@
 import { DataContextType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 type InputMessageProps = {
   otherUser: UserType;
   file: any;
   setFile: any;
+  submitBtnRef: React.RefObject<HTMLButtonElement>;
 };
 
-const InputMessage = ({ otherUser, file, setFile }: InputMessageProps) => {
+const InputMessage = ({
+  otherUser,
+  file,
+  setFile,
+  submitBtnRef,
+}: InputMessageProps) => {
   const { addChat } = useContext(DataContext) as DataContextType;
   const [message, setMessage] = useState("");
 
@@ -21,7 +27,8 @@ const InputMessage = ({ otherUser, file, setFile }: InputMessageProps) => {
     xhr.onload = function () {
       var reader = new FileReader();
       reader.onloadend = function () {
-        callback(reader.result);
+        // callback(reader.result);
+        console.log(reader.result);
       };
       reader.readAsDataURL(xhr.response);
     };
@@ -30,12 +37,67 @@ const InputMessage = ({ otherUser, file, setFile }: InputMessageProps) => {
     xhr.send();
   }
 
+    const [concatenatedBlob, setConcatenatedBlob] = useState(null);
+    // const fileParts = [newFilea, newFileb]; 
+    // useEffect(() => {
+    //     if (fileParts.length > 0) {
+    //         joinVideoFiles(fileParts)
+    //             .then((blob) => {
+    //                 setConcatenatedBlob(blob);
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Error joining video files:", error);
+    //             });
+    //     }
+    // }, [fileParts]);
+
+    // function joinVideoFiles(fileParts) {
+    //     return new Promise((resolve, reject) => {
+    //         const blobArray = [];
+    
+    //         fileParts.forEach((part) => {
+    //             const reader = new FileReader();
+    //             reader.onload = (event) => {
+    //                 blobArray.push(event.target.result);
+    //                 if (blobArray.length === fileParts.length) {
+    //                     const concatenatedBlob = new Blob(blobArray, { type: fileParts[0].type });
+    //                     resolve(concatenatedBlob);
+    //                 }
+    //             };
+    //             reader.onerror = (error) => {
+    //                 reject(error);
+    //             };
+    //             reader.readAsArrayBuffer(part);
+    //         });
+    //     });
+    // }
+
+
   function handleForm(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     if (file) {
-      toDataURL(URL.createObjectURL(file), (url: any) =>
-        addChat(otherUser.uid, url, file.type)
-      );
+      const a = file.slice(0, 1335112);
+      const b = file.slice(1335112, 2036432);
+      const newFilea = new File([a], file.name, { type: file.type });
+      const newFileb = new File([b], file.name, { type: file.type });
+      const files = [newFilea, newFileb];
+      const formData = new FormData();
+      files.forEach((file) => formData.append("file", file));
+      console.log(formData);
+      // toDataURL(URL.createObjectURL(newFilea), (url: any) =>
+      //   file.type.split("/")[0] == "image"
+      //     ? addChat(otherUser.uid, url, "image")
+      //     : file.type.split("/")[0] == "video"
+      //     ? addChat(otherUser.uid, url, "video")
+      //     : addChat(otherUser.uid, url, file.name)
+      // );
+      // toDataURL(URL.createObjectURL(newFileb), (url: any) =>
+      //   file.type.split("/")[0] == "image"
+      //     ? addChat(otherUser.uid, url, "image")
+      //     : file.type.split("/")[0] == "video"
+      //     ? addChat(otherUser.uid, url, "video")
+      //     : addChat(otherUser.uid, url, file.name)
+      // );
       setFile(null);
     } else {
       if (message.trim()) {
@@ -84,7 +146,7 @@ const InputMessage = ({ otherUser, file, setFile }: InputMessageProps) => {
             width={45}
           />
         </label>
-        <button>
+        <button ref={submitBtnRef}>
           <Image
             className="cursor-pointer hover:bg-slate-600 p-1 rounded-xl "
             src="/send.png"

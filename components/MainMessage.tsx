@@ -4,7 +4,6 @@ import ChatBox from "./ChatBox";
 import {
   useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -21,6 +20,7 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
   const [file, setFile] = useState<any>(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const goToBottomOfDiv = () => {
     setTimeout(() => {
@@ -57,8 +57,10 @@ const MainMessage = ({ otherUser, user }: MainMessageProps) => {
           setFile={setFile}
           message={message}
           otherUser={otherUser}
+          goToBottomOfDiv={goToBottomOfDiv}
+          submitBtnRef={submitBtnRef}
         />
-        <InputMessage otherUser={otherUser} file={file} setFile={setFile} />
+        <InputMessage submitBtnRef={submitBtnRef} otherUser={otherUser} file={file} setFile={setFile} />
       </div>
     );
   } else return <div className="w-[55%]"></div>;
