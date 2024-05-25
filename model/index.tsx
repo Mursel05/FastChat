@@ -6,11 +6,13 @@ export type ChatType = {
   seen: boolean;
   chatType: string;
 };
+
 export type MessagesDataType = {
   _id: string;
   chats: ChatType[];
   persons: string[];
 };
+
 export type UserType = {
   _id: string;
   uid: string;
@@ -20,10 +22,15 @@ export type UserType = {
   photo: string;
   lastSeen: string;
 };
+
 export type DataContextType = {
   messages: MessagesDataType[] | undefined;
   user: UserType | undefined;
-  addChat: (otherUserUid: string, message: string, type: string) => void;
+  addChat: (
+    otherUserUid: string,
+    message: string,
+    chatType: string,
+  ) => void;
   addMessage: (uid: string) => void;
   otherUsers: UserType[] | undefined;
   changeSeen: (otherUserUid: string) => void;

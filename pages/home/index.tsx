@@ -97,7 +97,14 @@ const Home = () => {
 
   return (
     <DataContext.Provider
-      value={{ addMessage, changeSeen, otherUsers, messages, user, addChat }}>
+      value={{
+        addMessage,
+        changeSeen,
+        otherUsers,
+        messages,
+        user,
+        addChat,
+      }}>
       <div className="flex h-screen w-100">
         <Profile />
         <MessagePersons selectOtherUser={selectOtherUser} />

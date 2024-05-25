@@ -2,6 +2,7 @@
 import { ChatType, DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import { useContext, useEffect, useRef, useState } from "react";
+import { FileIcon, defaultStyles } from "react-file-icon";
 
 const usePrevious = (value: any) => {
   const ref = useRef();
@@ -154,8 +155,19 @@ const ChatBox = ({
                   <span className="break-all">{item.message}</span>
                 ) : item.chatType == "video" ? (
                   <video controls src={item.message}></video>
-                ) : (
+                ) : item.chatType == "image" ? (
                   <img alt="img" src={item.message} />
+                ) : (
+                  <div className="w-[150px]">
+                    <FileIcon
+                      {...defaultStyles[
+                        item.chatType.split(".")[
+                          item.chatType.split(".").length - 1
+                        ]
+                      ]}
+                    />
+                    <span className="break-all">{item.chatType}</span>
+                  </div>
                 )}
               </div>
             </div>
