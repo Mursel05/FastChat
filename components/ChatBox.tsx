@@ -163,7 +163,7 @@ const ChatBox = ({
                       {...defaultStyles[
                         item.chatType.split(".")[
                           item.chatType.split(".").length - 1
-                        ]
+                        ] as keyof typeof defaultStyles
                       ]}
                     />
                     <span className="break-all">{item.chatType}</span>
