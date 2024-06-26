@@ -44,6 +44,8 @@ const InputMessage = ({
           ? addChat(otherUser.uid, url, "image")
           : file.type.split("/")[0] == "video"
           ? addChat(otherUser.uid, url, "video")
+          : file.type.split("/")[0] == "audio"
+          ? addChat(otherUser.uid, url, "audio")
           : addChat(otherUser.uid, url, file.name)
       );
       setFile(null);

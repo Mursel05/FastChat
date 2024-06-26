@@ -1,12 +1,30 @@
-import { UserType } from "@/model";
+import { DataContextType, MessagesDataType, UserType } from "@/model";
+import { DataContext } from "@/pages/home";
 import Image from "next/image";
+import { SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
 
 type TopProfileProps = {
   otherUser: UserType | undefined;
+  setOtherUser: (user: UserType | undefined) => void;
+  message: MessagesDataType | undefined;
 };
 
-const TopProfile = ({ otherUser }: TopProfileProps) => {
+const TopProfile = ({ otherUser, setOtherUser, message }: TopProfileProps) => {
+  const { deleteMessage } = useContext(DataContext) as DataContextType;
+  const [showOpt, setShowOpt] = useState(false);
+  const dropRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    document.addEventListener("mousedown", function (e: any) {
+      if (
+        !btnRef.current?.contains(e.target) &&
+        !dropRef.current?.contains(e.target)
+      ) {
+        setShowOpt(false);
+      }
+    });
+  }, []);
   return (
     <div className="bg-dark-blue-500 justify-between items-center flex p-6 pr-3">
       <div className="flex gap-3 items-center">
@@ -46,10 +64,32 @@ const TopProfile = ({ otherUser }: TopProfileProps) => {
             height={45}
           />
         </div>
-        <div className="cursor-pointer w-10 h-10 rounded-full hover:bg-slate-600 text-white flex flex-col gap-1 items-center justify-center ">
+        <div
+          ref={btnRef}
+          onClick={() => setShowOpt(!showOpt)}
+          className="cursor-pointer w-10 h-10 rounded-full hover:bg-slate-600 text-white flex flex-col gap-1 items-center justify-center ">
           <div className="h-1 w-1 rounded-full bg-white"></div>
           <div className="h-1 w-1 rounded-full bg-white"></div>
           <div className="h-1 w-1 rounded-full bg-white"></div>
+        </div>
+        <div
+          ref={dropRef}
+          className={`bg-white absolute right-0 top-20 z-30 ${
+            showOpt ? "flex" : "hidden"
+          } gap-1 flex-col rounded-md mr-1 overflow-hidden`}>
+          <div
+            onClick={() => {
+              deleteMessage(message?._id);
+              setOtherUser(undefined);
+            }}
+            className="hover:bg-slate-200 cursor-pointer py-2 px-4">
+            Delete chat
+          </div>
+          <div
+            onClick={() => setOtherUser(undefined)}
+            className="hover:bg-slate-200 cursor-pointer py-2 px-4">
+            Close chat
+          </div>
         </div>
       </div>
     </div>

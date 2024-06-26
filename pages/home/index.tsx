@@ -3,12 +3,13 @@ import MainMessage from "@/components/MainMessage";
 import MessagePersons from "@/components/MessagePersons";
 import Profile from "@/components/Profile";
 import { auth } from "@/config/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { WS_URL } from "@/config/Url";
 import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { createContext } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useRouter } from "next/router";
 
 export const DataContext = createContext<DataContextType | null>(null);
 
@@ -22,10 +23,12 @@ const Home = () => {
     share: false,
     shouldReconnect: () => true,
   });
+  const router = useRouter();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) setUid(user.uid);
+      else router.push("/signup");
     });
   }, []);
 
@@ -66,6 +69,16 @@ const Home = () => {
     }
   }
 
+  async function deleteMessage(messageId: string | undefined): Promise<void> {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "deleteMessage",
+        messageId,
+        uid,
+      });
+    }
+  }
+
   async function addMessage(otherUserUid: string): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
@@ -73,6 +86,14 @@ const Home = () => {
         uid,
         persons: [uid, otherUserUid],
       });
+    }
+  }
+
+  async function signOutUser() {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -103,11 +124,17 @@ const Home = () => {
         messages,
         user,
         addChat,
+        deleteMessage,
+        signOutUser,
       }}>
       <div className="flex h-screen w-100">
         <Profile />
         <MessagePersons selectOtherUser={selectOtherUser} />
-        <MainMessage otherUser={otherUser} user={user} />
+        <MainMessage
+          otherUser={otherUser}
+          user={user}
+          setOtherUser={setOtherUser}
+        />
       </div>
     </DataContext.Provider>
   );

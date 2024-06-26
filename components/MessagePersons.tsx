@@ -10,7 +10,7 @@ type MessagePersonsProps = {
 };
 
 const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
-  const { messages, otherUsers, addMessage } = useContext(
+  const { messages, otherUsers, addMessage, user } = useContext(
     DataContext
   ) as DataContextType;
   const [email, setEmail] = useState<string>("");
@@ -56,14 +56,20 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
         </div>
         <div className="email-modal absolute rounded-b-md bg-white flex flex-col overflow-hidden gap-1 pt-1 w-full">
           {email &&
-            users.map((user) => (
+            users.map((item) => (
               <div
-                key={user._id}
+                key={item._id}
                 onClick={() => {
-                  if (!messages?.some((u) => u.persons.includes(user.uid))) {
-                    addMessage(user.uid);
+                  if (
+                    !messages?.some(
+                      (u) =>
+                        !(u.clearOne == user?.uid) &&
+                        u.persons.includes(item.uid)
+                    )
+                  ) {
+                    addMessage(item.uid);
                   }
-                  selectOtherUser(user);
+                  selectOtherUser(item);
                   setEmail("");
                 }}
                 className="hover:bg-slate-100 cursor-pointer flex gap-3 items-center pl-1 p-2">
@@ -71,13 +77,13 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
                   width={50}
                   height={50}
                   className="rounded-full"
-                  src={user.photo}
+                  src={item.photo}
                   onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
                   alt="user photo"
                 />
                 <div className="flex flex-col text-black">
-                  <span>{user.name + " " + user.surname}</span>
-                  <span>{user.email}</span>
+                  <span>{item.name + " " + item.surname}</span>
+                  <span>{item.email}</span>
                 </div>
               </div>
             ))}

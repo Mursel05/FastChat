@@ -3,6 +3,8 @@ import { ChatType, DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
+import FileSaver from "file-saver";
+import { it } from "node:test";
 
 const usePrevious = (value: any) => {
   const ref = useRef();
@@ -19,6 +21,33 @@ interface OtherUserChatProps {
   otherUser: UserType;
   message: MessagesDataType;
 }
+
+const messageShow = (item: ChatType) => {
+  return (
+    <>
+      {item.chatType == "text" ? (
+        <span className="break-all">{item.message}</span>
+      ) : item.chatType == "video" ? (
+        <video controls src={item.message}></video>
+      ) : item.chatType == "image" ? (
+        <img alt="img" src={item.message} />
+      ) : item.chatType == "audio" ? (
+        <audio controls src={item.message}></audio>
+      ) : (
+        <div className="w-[150px] text-center flex flex-col gap-2">
+          <FileIcon
+            {...defaultStyles[
+              item.chatType.split(".")[
+                item.chatType.split(".").length - 1
+              ] as keyof typeof defaultStyles
+            ]}
+          />
+          <span className="break-all">{item.chatType}</span>
+        </div>
+      )}
+    </>
+  );
+};
 
 const OtherUserChat = ({
   item,
@@ -80,19 +109,29 @@ const OtherUserChat = ({
         onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
         alt="user-profile-pic"
       />
-      <div
-        className={`max-w-md text-white bg-text-blue-300 p-3 rounded-xl ${
-          message.chats.toReversed()[index - 1]?.sender == otherUser.uid
-            ? "rounded-s-none"
-            : ""
-        } rounded-ss-none`}>
-        {item.chatType == "text" ? (
-          <span className="break-all">{item.message}</span>
-        ) : item.chatType == "video" ? (
-          <video controls src={item.message}></video>
-        ) : (
-          <img alt="img" src={item.message} />
-        )}
+      <div className="flex flex-col gap-1">
+        <div
+          className={`max-w-md flex justify-center text-white bg-text-blue-300 p-3 rounded-xl ${
+            message.chats.toReversed()[index - 1]?.sender == otherUser.uid
+              ? "rounded-s-none"
+              : ""
+          } rounded-ss-none ${
+            item.chatType !== "text" &&
+            item.chatType !== "video" &&
+            item.chatType !== "audio" &&
+            "rounded-b-none"
+          }`}>
+          {messageShow(item)}
+        </div>
+        {item.chatType !== "text" &&
+          item.chatType !== "video" &&
+          item.chatType !== "audio" && (
+            <button
+              onClick={() => FileSaver.saveAs(item.message, item.chatType)}
+              className="bg-dark-blue-500 text-white py-2 w-full rounded-b-xl px-2">
+              Download
+            </button>
+          )}
       </div>
       <span className="text-gray-400 text-sm">{item.time.slice(12)}</span>
     </div>
@@ -144,31 +183,32 @@ const ChatBox = ({
               <span className="text-gray-400 text-sm">
                 {item.time.slice(12)}
               </span>
-              <div
-                key={index}
-                className={`max-w-md text-white bg-dark-blue-500 p-3 ${
-                  message.chats.toReversed()[index + 1]?.sender == user.uid
-                    ? "rounded-e-none"
-                    : ""
-                } rounded-xl rounded-ee-none`}>
-                {item.chatType == "text" ? (
-                  <span className="break-all">{item.message}</span>
-                ) : item.chatType == "video" ? (
-                  <video controls src={item.message}></video>
-                ) : item.chatType == "image" ? (
-                  <img alt="img" src={item.message} />
-                ) : (
-                  <div className="w-[150px]">
-                    <FileIcon
-                      {...defaultStyles[
-                        item.chatType.split(".")[
-                          item.chatType.split(".").length - 1
-                        ] as keyof typeof defaultStyles
-                      ]}
-                    />
-                    <span className="break-all">{item.chatType}</span>
-                  </div>
-                )}
+              <div className="flex flex-col gap-1">
+                <div
+                  key={index}
+                  className={`max-w-md flex justify-center text-white bg-dark-blue-500 p-3 ${
+                    message.chats.toReversed()[index + 1]?.sender == user.uid
+                      ? "rounded-e-none"
+                      : ""
+                  } rounded-xl rounded-ee-none ${
+                    item.chatType !== "text" &&
+                    item.chatType !== "video" &&
+                    item.chatType !== "audio" &&
+                    "rounded-es-none"
+                  }`}>
+                  {messageShow(item)}
+                </div>
+                {item.chatType !== "text" &&
+                  item.chatType !== "video" &&
+                  item.chatType !== "audio" && (
+                    <button
+                      onClick={() =>
+                        FileSaver.saveAs(item.message, item.chatType)
+                      }
+                      className="bg-text-blue-300 text-white py-2 w-full rounded-b-xl px-2">
+                      Download
+                    </button>
+                  )}
               </div>
             </div>
             <span
@@ -184,6 +224,7 @@ const ChatBox = ({
           </div>
         );
       })}
+
       {file && (
         <div className="absolute self-center flex flex-col items-center gap-4 bg-white mb-[-16px] p-3 w-2/3">
           <div className="flex w-full justify-between">
@@ -200,8 +241,21 @@ const ChatBox = ({
           </div>
           {file.type.includes("image") ? (
             <img src={URL.createObjectURL(file)} alt={file.name} />
+          ) : file.type.includes("video") ? (
+            <video controls src={URL.createObjectURL(file)}></video>
+          ) : file.type.includes("audio") ? (
+            <audio controls src={URL.createObjectURL(file)}></audio>
           ) : (
-            <span>{file.name}</span>
+            <div className="w-[150px] text-center">
+              <FileIcon
+                {...defaultStyles[
+                  file.name.split(".")[
+                    file.name.split(".").length - 1
+                  ] as keyof typeof defaultStyles
+                ]}
+              />
+              <span className="break-all">{file.name}</span>
+            </div>
           )}
         </div>
       )}

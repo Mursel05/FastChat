@@ -90,13 +90,6 @@ const Home = () => {
       console.log(error);
     }
   }
-  async function signOutUser() {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <div className="h-[100vh] flex flex-col items-center justify-center">

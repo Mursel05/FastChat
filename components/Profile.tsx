@@ -5,13 +5,19 @@ import Image from "next/image";
 import { useContext } from "react";
 
 const Profile = () => {
-  const { user } = useContext(DataContext) as DataContextType;
+  const { user, signOutUser } = useContext(DataContext) as DataContextType;
 
   return (
     <div className="bg-dark-blue-500 p-9 flex flex-col w-[17%] gap-6">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <Image className="h-[35px]" alt="logo" src="/favicon.png" width={35} height={35} />
+          <Image
+            className="h-[35px]"
+            alt="logo"
+            src="/favicon.png"
+            width={35}
+            height={35}
+          />
           <div>
             <span className="text-white font-bold tracking-wider text-xl">
               FAST
@@ -38,26 +44,27 @@ const Profile = () => {
         </button>
       </div>
       <div className="flex gap-4 flex-col">
-        <div className="flex gap-2 items-center text-gray-300">
-          <Image alt="groups" src="/group.png" width={18} height={18} />
-          <span>Groups</span>
-        </div>
-        <div className="flex gap-2 items-center text-gray-300">
-          <Image className="h-[18px]"  alt="contacts" src="/vector.png" width={18} height={18} />
-          <span>Contacts</span>
-        </div>
-        <div className="flex gap-2 items-center text-gray-300">
-          <Image alt="calls" src="/phone.png" width={18} height={18} />
-          <span>Calls</span>
-        </div>
-        <div className="flex gap-2 items-center text-gray-300">
-          <Image alt="settings" src="/home.png" width={18} height={18} />
+        <div className="flex gap-2 items-center text-gray-300 cursor-pointer">
+          <Image
+            className="mt-[1px]"
+            alt="settings"
+            src="/home.png"
+            width={18}
+            height={18}
+          />
           <span>Settings</span>
         </div>
-        <div className="flex gap-2 items-center text-gray-300">
-          <Image className="h-[18px]" alt="night mode" src="/moon.png" width={18} height={18} />
-          <span>Night Mode</span>
-          <div></div>
+        <div
+          onClick={() => signOutUser()}
+          className="flex gap-2 items-center text-gray-300 cursor-pointer">
+          <Image
+            className="mt-[1px]"
+            alt="calls"
+            src="/log-out.png"
+            width={18}
+            height={18}
+          />
+          <span>Sign out</span>
         </div>
       </div>
     </div>
