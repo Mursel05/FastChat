@@ -12,11 +12,7 @@ type MainMessageProps = {
   setOtherUser: (user: UserType | undefined) => void;
 };
 
-const MainMessage = ({
-  otherUser,
-  user,
-  setOtherUser,
-}: MainMessageProps) => {
+const MainMessage = ({ otherUser, user, setOtherUser }: MainMessageProps) => {
   const { messages } = useContext(DataContext) as DataContextType;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<MessagesDataType>();
@@ -36,13 +32,15 @@ const MainMessage = ({
 
   useEffect(() => {
     setMessage(
-      messages?.find(
-        (item) =>
-          item.persons.includes(otherUser?.uid || "") &&
-          item.persons.includes(user?.uid || "")
-      )
+      messages?.find((item) => item.persons.includes(otherUser?.uid || ""))
     );
   }, [otherUser, messages]);
+
+  useEffect(() => {
+    if (!message) {
+      setOtherUser(undefined);
+    }
+  }, [message]);
 
   useEffect(() => {
     goToBottomOfDiv();

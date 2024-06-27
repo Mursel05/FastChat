@@ -19,6 +19,7 @@ const Home = () => {
   const [otherUser, setOtherUser] = useState<UserType | undefined>();
   const [otherUsers, setOtherUsers] = useState<UserType[] | undefined>();
   const [messages, setMessages] = useState<MessagesDataType[]>();
+  const [error, setError] = useState<string>("");
   const { sendJsonMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
     share: false,
     shouldReconnect: () => true,
@@ -69,12 +70,16 @@ const Home = () => {
     }
   }
 
-  async function deleteMessage(messageId: string | undefined): Promise<void> {
+  async function deleteMessage(
+    messageId: string | undefined,
+    otherUserUid: string | undefined
+  ): Promise<void> {
     if (readyState === ReadyState.OPEN) {
       sendJsonMessage({
         type: "deleteMessage",
         messageId,
         uid,
+        persons: [uid, otherUserUid],
       });
     }
   }
@@ -112,6 +117,7 @@ const Home = () => {
       setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
+      data.error && setError(data.error);
     }
   }, [lastMessage]);
 
@@ -135,6 +141,11 @@ const Home = () => {
           user={user}
           setOtherUser={setOtherUser}
         />
+        <div className={`${error ? "w-full h-full bg-black opacity-50 absolute grid place-items-center" : "hidden"}`}>
+          <div className={`${error ? "" : "hidden"}`}>
+            <span>{error}</span>
+          </div>
+        </div>
       </div>
     </DataContext.Provider>
   );

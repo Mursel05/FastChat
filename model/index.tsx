@@ -11,7 +11,6 @@ export type MessagesDataType = {
   _id: string;
   chats: ChatType[];
   persons: string[];
-  clearOne: string;
 };
 
 export type UserType = {
@@ -31,6 +30,6 @@ export type DataContextType = {
   addMessage: (uid: string) => void;
   otherUsers: UserType[] | undefined;
   changeSeen: (otherUserUid: string) => void;
-  deleteMessage: (messageId: string | undefined) => void;
+  deleteMessage: (messageId: string | undefined, otherUserUid: string|undefined) => void;
   signOutUser: () => void;
 };

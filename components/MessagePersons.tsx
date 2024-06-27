@@ -25,6 +25,7 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
       sendJsonMessage({
         type: "getUsersByEmail",
         email,
+        uid: user?.uid,
       });
     }
   }, [readyState, email]);
@@ -61,11 +62,8 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
                 key={item._id}
                 onClick={() => {
                   if (
-                    !messages?.some(
-                      (u) =>
-                        !(u.clearOne == user?.uid) &&
-                        u.persons.includes(item.uid)
-                    )
+                    !messages?.some((u) => u.persons.includes(item.uid)) ||
+                    item.uid === user?.uid
                   ) {
                     addMessage(item.uid);
                   }

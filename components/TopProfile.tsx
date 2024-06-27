@@ -79,7 +79,7 @@ const TopProfile = ({ otherUser, setOtherUser, message }: TopProfileProps) => {
           } gap-1 flex-col rounded-md mr-1 overflow-hidden`}>
           <div
             onClick={() => {
-              deleteMessage(message?._id);
+              deleteMessage(message?._id, otherUser?.uid);
               setOtherUser(undefined);
             }}
             className="hover:bg-slate-200 cursor-pointer py-2 px-4">
