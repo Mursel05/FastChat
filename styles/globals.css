@@ -76,6 +76,19 @@ body {
   .message-height {
     height: calc(100% - 168px);
   }
+
+  .scroll-design::-webkit-scrollbar {
+    width: 10px;
+  }
+  .scroll-design::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border-radius: 100px;
+  }
+  .scroll-design::-webkit-scrollbar-thumb {
+    background-color: #818080;
+    border-radius: 100px;
+  }
+
   .find-email-input {
     outline: none;
     padding: 0.3rem 0rem;

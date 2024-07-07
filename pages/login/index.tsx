@@ -1,5 +1,4 @@
 import PasswordShow from "@/components/PasswordShow";
-import { WS_URL } from "@/config/Url";
 import { auth, googleProvider } from "@/config/firebase";
 import {
   signInWithEmailAndPassword,
@@ -11,6 +10,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+
+const WS_URL: any = process.env.NEXT_PUBLIC_WS_URL;
 
 const Home = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

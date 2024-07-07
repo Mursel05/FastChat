@@ -3,7 +3,8 @@ import MessagePerson from "./MessagePerson";
 import { DataContextType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { WS_URL } from "@/config/Url";
+
+const WS_URL: any = process.env.NEXT_PUBLIC_WS_URL;
 
 type MessagePersonsProps = {
   selectOtherUser: (user: UserType | undefined) => void;
@@ -88,15 +89,23 @@ const MessagePersons = ({ selectOtherUser }: MessagePersonsProps) => {
         </div>
       </div>
       <p className="text-blue-300 mb-3 mt-2 tracking-[6px]">MESSAGES</p>
-      <div className="flex flex-col gap-2">
-        {otherUsers?.map((user, i) => (
+      <div className="flex flex-col gap-2 overflow-y-auto scroll-design h-5/6">
+        {otherUsers ? (
+          otherUsers.map((user, i) => (
+            <MessagePerson
+              key={user._id}
+              message={messages && messages[i]}
+              user={user}
+              selectOtherUser={selectOtherUser}
+            />
+          ))
+        ) : (
           <MessagePerson
-            key={user._id}
-            message={messages && messages[i]}
-            user={user}
+            message={undefined}
+            user={undefined}
             selectOtherUser={selectOtherUser}
           />
-        ))}
+        )}
       </div>
     </div>
   );

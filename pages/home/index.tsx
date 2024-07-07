@@ -5,18 +5,20 @@ import Profile from "@/components/Profile";
 import { auth } from "@/config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { WS_URL } from "@/config/Url";
 import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { createContext } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
+const WS_URL: any = process.env.NEXT_PUBLIC_WS_URL;
 export const DataContext = createContext<DataContextType | null>(null);
 
 const Home = () => {
   const [user, setUser] = useState<UserType>();
   const [uid, setUid] = useState<string>();
   const [otherUser, setOtherUser] = useState<UserType | undefined>();
+  const [settings, setSettings] = useState<boolean>(false);
   const [otherUsers, setOtherUsers] = useState<UserType[] | undefined>();
   const [messages, setMessages] = useState<MessagesDataType[]>();
   const [error, setError] = useState<string>("");
@@ -32,6 +34,18 @@ const Home = () => {
       else router.push("/signup");
     });
   }, []);
+
+  useEffect(() => {
+    if (otherUser) {
+      setSettings(false);
+    }
+  }, [otherUser]);
+
+  useEffect(() => {
+    if (settings) {
+      setOtherUser(undefined);
+    }
+  }, [settings]);
 
   function selectOtherUser(user: UserType | undefined) {
     setOtherUser(user);
@@ -70,6 +84,16 @@ const Home = () => {
     }
   }
 
+  async function updateUser(userDetail: UserType | undefined): Promise<void> {
+    if (readyState === ReadyState.OPEN) {
+      sendJsonMessage({
+        type: "updateUser",
+        uid,
+        user: userDetail,
+      });
+    }
+  }
+
   async function deleteMessage(
     messageId: string | undefined,
     otherUserUid: string | undefined
@@ -103,7 +127,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
+    if (readyState === ReadyState.OPEN && uid) {
       sendJsonMessage({
         type: "getData",
         uid: uid,
@@ -114,7 +138,7 @@ const Home = () => {
   useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
-      setMessages(data.messages);
+      data.messages && setMessages(data.messages);
       data.user && setUser(data.user);
       data.otherUsers && setOtherUsers(data.otherUsers);
       data.error && setError(data.error);
@@ -132,21 +156,45 @@ const Home = () => {
         addChat,
         deleteMessage,
         signOutUser,
+        updateUser,
       }}>
       <div className="flex h-screen w-100">
-        <Profile />
+        <Profile setSettings={setSettings} />
         <MessagePersons selectOtherUser={selectOtherUser} />
         <MainMessage
           otherUser={otherUser}
           user={user}
           setOtherUser={setOtherUser}
+          settings={settings}
+          setSettings={setSettings}
         />
-        <div className={`${error ? "w-full h-full bg-black opacity-50 absolute grid place-items-center" : "hidden"}`}>
-          <div className={`${error ? "" : "hidden"}`}>
-            <span>{error}</span>
-          </div>
-        </div>
       </div>
+      {error && (
+        <>
+          <div className="w-full h-full bg-black opacity-50 absolute top-0 left-0"></div>
+          <div className="absolute top-0 left-0 grid place-items-center w-full h-full">
+            <div className="bg-white flex flex-col pt-3 pr-3 rounded-md">
+              <Image
+                onClick={() => setError("")}
+                src={"/close-icon.png"}
+                alt="error"
+                width={24}
+                height={24}
+                className="self-end cursor-pointer"
+              />
+              <div className="flex items-center gap-2 p-8 pt-5">
+                <Image
+                  src={"/error-icon.png"}
+                  alt="error"
+                  width={35}
+                  height={35}
+                />
+                <span>{error}</span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </DataContext.Provider>
   );
 };

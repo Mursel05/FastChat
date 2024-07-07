@@ -1,7 +1,7 @@
 import { DataContextType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 type InputMessageProps = {
   otherUser: UserType;

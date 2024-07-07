@@ -30,6 +30,10 @@ export type DataContextType = {
   addMessage: (uid: string) => void;
   otherUsers: UserType[] | undefined;
   changeSeen: (otherUserUid: string) => void;
-  deleteMessage: (messageId: string | undefined, otherUserUid: string|undefined) => void;
+  deleteMessage: (
+    messageId: string | undefined,
+    otherUserUid: string | undefined
+  ) => void;
   signOutUser: () => void;
+  updateUser: (userDetail: UserType | undefined) => void;
 };

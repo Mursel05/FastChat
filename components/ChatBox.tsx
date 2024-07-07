@@ -4,7 +4,6 @@ import { DataContext } from "@/pages/home";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import FileSaver from "file-saver";
-import { it } from "node:test";
 
 const usePrevious = (value: any) => {
   const ref = useRef();
@@ -166,7 +165,7 @@ const ChatBox = ({
   return (
     <div
       ref={chatBoxRef}
-      className="py-4 bg-dark-blue-400 px-7 flex flex-col-reverse overflow-y-scroll gap-2 message-height relative">
+      className="py-4 bg-dark-blue-400 px-5 flex flex-col-reverse overflow-y-auto gap-2 scroll-design message-height relative">
       {message?.chats.toReversed().map((item, index) => {
         return item.sender != user?.uid ? (
           <OtherUserChat

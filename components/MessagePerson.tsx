@@ -14,6 +14,7 @@ const MessagePerson = ({
     const unSeenChats = message?.chats.filter(
       (chat) => chat.sender == user?.uid && !chat.seen
     ).length;
+
     return (
       <div
         onClick={() => selectOtherUser(user)}
@@ -43,6 +44,20 @@ const MessagePerson = ({
             ) : (
               ""
             )}
+          </div>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        onClick={() => selectOtherUser(user)}
+        className="cursor-pointer flex items-center gap-3 p-4 bg-dark-blue-400">
+        <div className="w-[70px] h-[70px] rounded-full bg-[#242c31]"></div>
+        <div className="text-white flex flex-col gap-1 w-[calc(100%-80px)]">
+          <div className="bg-[#242c31] my-2 w-full h-2 rounded-3xl"></div>
+          <div className="text-white flex items-center justify-between gap-1 w-[calc(100%-5px)]">
+            <div className="bg-[#242c31] my-2 w-full h-2 rounded-3xl"></div>
           </div>
         </div>
       </div>

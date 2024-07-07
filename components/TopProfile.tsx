@@ -1,7 +1,7 @@
 import { DataContextType, MessagesDataType, UserType } from "@/model";
 import { DataContext } from "@/pages/home";
 import Image from "next/image";
-import { SyntheticEvent, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 type TopProfileProps = {
   otherUser: UserType | undefined;

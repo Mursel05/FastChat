@@ -4,7 +4,11 @@ import { DataContext } from "@/pages/home";
 import Image from "next/image";
 import { useContext } from "react";
 
-const Profile = () => {
+interface ProfileProps {
+  setSettings: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Profile = ({ setSettings }: ProfileProps) => {
   const { user, signOutUser } = useContext(DataContext) as DataContextType;
 
   return (
@@ -28,15 +32,23 @@ const Profile = () => {
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <img
-            className="rounded-full"
-            alt="profile picture"
-            src={user?.photo}
-            onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
-            width={100}
-            height={100}
-          />
-          <p className="text-white">{user?.name + " " + user?.surname}</p>
+          {user ? (
+            <img
+              className="rounded-full"
+              alt="profile picture"
+              src={user?.photo}
+              onError={(e) => (e.currentTarget.src = "/no-profile.jpg")}
+              width={100}
+              height={100}
+            />
+          ) : (
+            <div className="w-[100px] h-[100px] rounded-full bg-[#242c31]"></div>
+          )}
+          {user ? (
+            <p className="text-white">{user?.name + " " + user?.surname}</p>
+          ) : (
+            <div className="bg-[#242c31] my-2 w-full h-2 rounded-3xl"></div>
+          )}
         </div>
         <button className="p-1 mt-5 flex items-center justify-center gap-1 px-4 text-white bg-text-blue-300  rounded-xl rounded-ss-none">
           <Image alt="message" src="/message.png" width={15} height={15} />
@@ -44,7 +56,9 @@ const Profile = () => {
         </button>
       </div>
       <div className="flex gap-4 flex-col">
-        <div className="flex gap-2 items-center text-gray-300 cursor-pointer">
+        <div
+          onClick={() => setSettings(true)}
+          className="flex gap-2 items-center text-gray-300 cursor-pointer">
           <Image
             className="mt-[1px]"
             alt="settings"
