@@ -11,9 +11,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showShowPassword, setShowShowPassword] = useState<string>("invisible");
   const [passwordType, setPasswordType] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("string@mail.ru");
+  const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("invisible");
-  const [password, setPassword] = useState<string>("string123");
+  const [password, setPassword] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("invisible");
   const router = useRouter();
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
